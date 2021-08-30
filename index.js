@@ -91,7 +91,8 @@ async function loadList(){
         storageQuota: 10000000,
         runScripts: 'dangerously',
         resources: "usable",
-        cookieJar
+        cookieJar,
+        virtualConsole: 
     });
     fs.writeFileSync("test.html", dom.serialize())
     return new Promise((resolve, reject) => {
@@ -155,7 +156,7 @@ void async function main(){
     const dom = await loadList()
     loadJquery(dom)
     // console.log()
-    console.log(document.getElementById("fPP:searchProcessos"))
+    console.log(document.getElementById("fPP:searchProcessos").outerHTML)
     // await timer(1000)
     // await saveJson2Mongo(testdata)
     // await getDatabase()
