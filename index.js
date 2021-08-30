@@ -169,7 +169,7 @@ void async function main(){
     }while($($status).css('display') != 'none')
     
     const $table = document.getElementById('fPP:processosTable:tb')
-    const ids = $($table).find('tr>td:first').map( $td => $td.id )
+    const ids = $($table).find('tr>td:first-child').map( $td => $td.id )
     console.log("process ids", ids)
     //fPP:processosTable:tb > tr > td:first > a
 
