@@ -45,7 +45,10 @@ const defaultHeaders = {
 Object.assign(axios.defaults.headers, defaultHeaders)
 
 function loadJquery(dom){
-    global.$ = dom.$
+    delete require.cache[require.resolve('jquery')]
+    global.window = dom.window
+    global.document = dom.window.document
+    global.$ = require('jquery')(window)
 }
 
 async function login(){
