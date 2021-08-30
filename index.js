@@ -93,9 +93,10 @@ async function loadList(){
         resources: "usable",
         cookieJar
     });
+    fs.writeFileSync("test.html", dom.serialize())
     loadJquery(dom)
     // console.log()
-    console.log(global.$("#fPP:searchProcessos").attr('id'))
+    console.log($("#fPP:searchProcessos").attr('id'))
     /*
     $("#fPP:searchProcessos").click()
     do{
@@ -103,7 +104,7 @@ async function loadList(){
         console.log("loading..")
     }while($("#_viewRoot:status").css('display') == 'block')
     */
-   console.log(dom.window.$)
+//    console.log(dom.window.$)
 }
 
 async function extractData(url){
@@ -152,10 +153,10 @@ void async function main(){
     await login()
 
     await loadList()
-    await timer(1000)
+    // await timer(1000)
     // await saveJson2Mongo(testdata)
     // await getDatabase()
-    await extractData()
+    // await extractData()
 }()
 
 const testdata = {
