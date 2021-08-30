@@ -153,8 +153,10 @@ void async function main(){
     await login()
 
     const dom = await loadList()
-    await timer(4000)
     loadJquery(dom)
+    do{
+        await timer(1000)
+    }while(!window.executarReCaptcha)
     // console.log()
     console.log(document.getElementById("fPP:searchProcessos").outerHTML)
     document.getElementById("fPP:searchProcessos").click()
