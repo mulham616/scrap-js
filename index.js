@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
 const axios = require('axios').default
@@ -6,6 +8,9 @@ const request = require('request')
 const decache = require('decache')
 const axiosCookieJarSupport = require('axios-cookiejar-support').default
 const tough = require('tough-cookie')
+const util = require('util')
+const timer = util.promisify(setTimeout)
+require('./database/connect')
 
 axiosCookieJarSupport(axios);
 
@@ -84,10 +89,15 @@ async function loadList(){
     loadJquery(dom)
     // console.log()
     console.log($("#fPP:searchProcessos").attr('id'))
+    $("#fPP:searchProcessos").click()
+    do{
+        await timer(100)
+    }while($("#xxx").attr('hidden') != true)
+
 }
 
 void async function main(){
     // const cookieJar = new jsdom.CookieJar(store, options);
     await login()
-    loadList()
+    await loadList()
 }()
