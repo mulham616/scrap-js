@@ -166,6 +166,7 @@ async function requestData(p_id){
         const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
         console.log('Login Success:', urls.loginUrl)
         console.log('Cookie:', cookieString)
+        console.log('html', response.data)
         return cookieString
     }catch(e){
         // console.log(e)
