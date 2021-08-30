@@ -194,7 +194,7 @@ void async function main(){
     const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id.split(":")[2] )
     console.log("process ids", ids)
     for( let p_id of ids ){
-        const jsondata = extractData(p_id)
+        const jsondata = await extractData(p_id)
     }
     
     //fPP:processosTable:tb > tr > td:first > a
