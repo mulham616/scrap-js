@@ -50,7 +50,7 @@ function loadJquery(dom){
     global.window = dom.window
     global.document = dom.window.document
     global.$ = require('jquery')
-    console.log($)
+    // console.log($)
 }
 
 async function login(){
