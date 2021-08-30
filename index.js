@@ -13,10 +13,17 @@ const cookieJar = new tough.CookieJar();
 
 axios.defaults.jar = cookieJar
 
+const urls = {
+    host: 'https://pje.tjma.jus.br',
+    loginPage: 'https://pje.tjma.jus.br/pje/login.seam',
+    loginUrl: 'https://pje.tjma.jus.br/pje/logar.seam',
+    listViewUrl: 'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam'
+}
+
 const defaultHeaders = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36', 
     'Origin': 'https://pje.tjma.jus.br', 
-    'referer': 'https://pje.tjma.jus.br/pje/login.seam', 
+    'referer': urls.loginPage, 
     'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"', 
     'sec-ch-ua-mobile': '?0', 
     'sec-fetch-dest': 'document', 
@@ -30,26 +37,18 @@ const defaultHeaders = {
 
 Object.assign(axios.defaults.headers, defaultHeaders)
 
-const urls = {
-    loginPageLink: "https://pje.tjma.jus.br/pje/login.seam",
-    loginUrl: "https://pje.tjma.jus.br/pje/logar.seam"
-}
-
 function loadJquery(dom){
-    decache('jquery')
-    global.window = dom.window
-    global.document = dom.document
-    global.$ = require('jquery')
+    global.$ = dom.$
 }
 
 async function login(){
-    var data = qs.stringify({
-    'username': '98090720315',
-    'password': 'mimimi05',
-    'newPassword1': '',
-    'newPassword2': '' 
+    const data = qs.stringify({
+        'username': '98090720315',
+        'password': 'mimimi05',
+        'newPassword1': '',
+        'newPassword2': '' 
     });
-    var config = {
+    const config = {
         method: 'post',
         url: urls.loginUrl,
         headers: { 
@@ -63,8 +62,8 @@ async function login(){
     try{
         const response = await request
         const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
-        console.log("Login Success:", urls.loginUrl)
-        console.log("Cookie:", cookieString)
+        console.log('Login Success:', urls.loginUrl)
+        console.log('Cookie:', cookieString)
         return cookieString
     }catch(e){
         console.log(e)
@@ -72,7 +71,23 @@ async function login(){
     }
 }
 
+async function loadList(){
+    const dom = await JSDOM.fromURL(urls.listViewUrl, {
+        referrer: urls.loginUrl,
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
+        includeNodeLocations: true,
+        storageQuota: 10000000,
+        runScripts: 'dangerously',
+        resources: "usable",
+        cookieJar
+    });
+    loadJquery(dom)
+    // console.log()
+    console.log($("#fPP:searchProcessos").attr('id'))
+}
+
 void async function main(){
     // const cookieJar = new jsdom.CookieJar(store, options);
     await login()
+    loadList()
 }()
