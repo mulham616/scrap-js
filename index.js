@@ -61,6 +61,7 @@ async function login(){
         'newPassword1': '',
         'newPassword2': '' 
     });
+    
     const config = {
         method: 'post',
         url: urls.loginUrl,
@@ -108,6 +109,70 @@ async function loadList(){
 //    console.log(dom.window.$)
 }
 
+async function requestData(p_id){
+    const id = p_id.split(":")[2]
+    const data = qs.stringify({
+        'AJAXREQUEST': '_viewRoot',
+        'fPP:j_id150:nomeParte': '',
+        'fPP:j_id159:nomeAdvogado': '',
+        'tipoMascaraDocumento': 'on',
+        'fPP:dpDec:documentoParte': '',
+        'fPP:numeroProcesso:numeroSequencial': '', 
+        'fPP:numeroProcesso:numeroDigitoVerificador': '', 
+        'fPP:numeroProcesso:ano': '', 
+        'fPP:numeroProcesso:ramoJustica': 8,
+        'fPP:numeroProcesso:respectivoTribunal': 10,
+        'fPP:numeroProcesso:numeroOrgaoJustica': '', 
+        'fPP:processoReferenciaDecoration:habilitarMascaraProcessoReferencia': true,
+        'fPP:processoReferenciaDecoration:IdProcessoReferenciaComMascaraDecoration:IdProcessoReferenciaComMascara': '', 
+        'fPP:j_id233:assunto': '', 
+        'fPP:j_id242:classeJudicial': '', 
+        'fPP:j_id251:numeroDocumento': '', 
+        'fPP:decorationDados:numeroOAB': '', 
+        'fPP:decorationDados:letraOAB': '', 
+        'fPP:decorationDados:ufOABCombo': 'org.jboss.seam.ui.NoSelectionConverter.noSelectionValue',
+        'fPP:jurisdicaoComboDecoration:jurisdicaoCombo': 'org.jboss.seam.ui.NoSelectionConverter.noSelectionValue',
+        'fPP:orgaoJulgadorComboDecoration:orgaoJulgadorCombo': 'org.jboss.seam.ui.NoSelectionConverter.noSelectionValue',
+        'fPP:dataAutuacaoDecoration:dataAutuacaoInicioInputDate': '', 
+        'fPP:dataAutuacaoDecoration:dataAutuacaoInicioInputCurrentDate': '08/2021',
+        'fPP:dataAutuacaoDecoration:dataAutuacaoFimInputDate': '', 
+        'fPP:dataAutuacaoDecoration:dataAutuacaoFimInputCurrentDate': '08/2021',
+        'fPP:valorDaCausaDecoration:valorCausaInicial': '', 
+        'fPP:valorDaCausaDecoration:valorCausaFinal': '', 
+        'fPP:j_id414:movimentacaoProcessualSuggest': '', 
+        'fPP:j_id414:j_id427_selection': '', 
+        'fPP': 'fPP',
+        'autoScroll': '', 
+        'javax.faces.ViewState': 'j_id25',
+        'idProcessoSelecionado': id,
+        // 'fPP:processosTable:894603:j_id445': 'fPP:processosTable:894603:j_id445',
+        [p_id]: p_id,
+        'ajaxSingle': p_id,
+        'AJAX:EVENTS_COUNT': 1
+    })
+    const config = {
+        url: urls.listViewUrl,
+        method: 'post',
+        headers: { 
+            
+            'Content-Type': 'application/x-www-form-urlencoded', 
+        },
+        data : data
+    };
+
+    const request = axios(config)
+    try{
+        const response = await request
+        const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
+        console.log('Login Success:', urls.loginUrl)
+        console.log('Cookie:', cookieString)
+        return cookieString
+    }catch(e){
+        // console.log(e)
+        return false
+    }
+}
+
 async function extractData(p_id){
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam#
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=886456&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464
@@ -116,6 +181,7 @@ async function extractData(p_id){
     // title="0000034-76.2016.8.10.0125"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0000034-76.2016.8.10.0125</font></font></a><a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" onclick="A4J.AJAX.Submit('fPP',event,{'similarityGroupingId':'fPP:processosTable:886456:j_id445','parameters':{'fPP:processosTable:886456:j_id445':'fPP:processosTable:886456:j_id445','idProcessoSelecionado':886456,'ajaxSingle':'fPP:processosTable:886456:j_id445'} } );return false;" title="0000034-76.2016.8.10.0125"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0000034-76.2016.8.10.0125</font></font></a>
     // fPP:processosTable:996954:j_id445
     // fPP:processosTable:tb > tr > td:first > a
+    p_id = p_id.split(":")[2]
     const dom = await JSDOM.fromURL(`https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=${p_id}&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464`,
         {
             referrer: urls.loginUrl,
@@ -191,9 +257,11 @@ void async function main(){
     }while($($status).css('display') != 'none')
     
     const $table = document.getElementById('fPP:processosTable:tb')
-    const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id.split(":")[2] )
+    const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id )
     console.log("process ids", ids)
     for( let p_id of ids ){
+        await requestData(p_id)
+        await timer(500)
         const jsondata = await extractData(p_id)
     }
     
