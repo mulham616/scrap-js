@@ -78,7 +78,7 @@ async function login(){
         console.log('Cookie:', cookieString)
         return cookieString
     }catch(e){
-        console.log(e)
+        // console.log(e)
         return false
     }
 }
@@ -121,7 +121,7 @@ async function extractData(url){
         fs.writeFileSync("test.html", response.data)
     }
     catch(e){
-        console.error(e)
+        // console.error(e)
     }
 }
 
@@ -140,7 +140,7 @@ async function saveJson2Mongo(data){
         await jsonData.save()
         console.log("process saved:", data.num_process)
     }catch(e){
-        console.error(e)
+        // console.error(e)
     }
 }
 
