@@ -94,9 +94,9 @@ async function loadList(){
         cookieJar
     });
     fs.writeFileSync("test.html", dom.serialize())
-    loadJquery(dom)
-    // console.log()
-    console.log($("#fPP:searchProcessos").attr('id'))
+    return new Promise((resolve, reject) => {
+        dom.window.onload = resolve(dom)
+    })
     /*
     $("#fPP:searchProcessos").click()
     do{
@@ -152,7 +152,10 @@ async function getDatabase(){
 void async function main(){
     await login()
 
-    await loadList()
+    const dom = await loadList()
+    loadJquery(dom)
+    // console.log()
+    console.log($("#fPP:searchProcessos").attr('id'))
     // await timer(1000)
     // await saveJson2Mongo(testdata)
     // await getDatabase()
