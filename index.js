@@ -25,7 +25,8 @@ const urls = {
     host: 'https://pje.tjma.jus.br',
     loginPage: 'https://pje.tjma.jus.br/pje/login.seam',
     loginUrl: 'https://pje.tjma.jus.br/pje/logar.seam',
-    listViewUrl: 'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam'
+    listViewUrl: 'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam',
+    detailViewUrl: 'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam'
 }
 
 const defaultHeaders = {
@@ -107,7 +108,7 @@ async function loadList(){
 //    console.log(dom.window.$)
 }
 
-async function extractData(url){
+async function extractData(p_id){
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam#
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=886456&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464
     // <a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" 
@@ -115,14 +116,35 @@ async function extractData(url){
     // title="0000034-76.2016.8.10.0125"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0000034-76.2016.8.10.0125</font></font></a><a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" onclick="A4J.AJAX.Submit('fPP',event,{'similarityGroupingId':'fPP:processosTable:886456:j_id445','parameters':{'fPP:processosTable:886456:j_id445':'fPP:processosTable:886456:j_id445','idProcessoSelecionado':886456,'ajaxSingle':'fPP:processosTable:886456:j_id445'} } );return false;" title="0000034-76.2016.8.10.0125"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0000034-76.2016.8.10.0125</font></font></a>
     // fPP:processosTable:996954:j_id445
     // fPP:processosTable:tb > tr > td:first > a
-    const request = axios.get("https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=886456&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464")
-    try{
-        const response = await request
-        fs.writeFileSync("test.html", response.data)
-    }
-    catch(e){
-        // console.error(e)
-    }
+    const dom = await JSDOM.fromURL(`https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=${p_id}&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464`,
+        {
+            referrer: urls.loginUrl,
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
+            includeNodeLocations: true,
+            storageQuota: 10000000,
+            runScripts: 'dangerously',
+            resources: "usable",
+            cookieJar
+        }    
+    )
+    await (async function(){
+        return new Promise((resolve, reject) => {
+            dom.window.onload = resolve
+        })
+    })()
+    loadJquery(dom)
+    const jsondata = {}
+    jsondata.num_process = p_id
+    /****** get details *******/
+    $detail_div = document.getElementById("num_process")
+    jsondata.details = Array.from($($detail_div).find("dt")).map($dt => 
+        ({
+            key: $dt.innerHTML,
+            value: $dt.nextSibling().innerHTML
+        })
+    )
+    console.log(jsondata)
+    return jsondata
 }
 
 async function downloadFile(){
@@ -169,8 +191,11 @@ void async function main(){
     }while($($status).css('display') != 'none')
     
     const $table = document.getElementById('fPP:processosTable:tb')
-    const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id )
+    const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id.split(":")[2] )
     console.log("process ids", ids)
+    for( let p_id of ids ){
+        const jsondata = extractData(p_id)
+    }
     
     //fPP:processosTable:tb > tr > td:first > a
 
