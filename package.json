@@ -1,0 +1,29 @@
+{
+  "name": "crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx babel index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "axios-cookiejar-support": "^1.0.1",
+    "babel-preset-env": "^1.7.0",
+    "decache": "^4.6.0",
+    "formdata": "^0.10.4",
+    "jquery": "^3.6.0",
+    "jsdom": "^17.0.0",
+    "qs": "^6.10.1",
+    "request": "^2.88.2",
+    "tough-cookie": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9"
+  }
+}
