@@ -154,7 +154,7 @@ void async function main(){
 
     const dom = await loadList()
     await timer(4000)
-    // loadJquery(dom)
+    loadJquery(dom)
     // console.log()
     console.log(document.getElementById("fPP:searchProcessos").outerHTML)
     document.getElementById("fPP:searchProcessos").click()
