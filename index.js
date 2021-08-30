@@ -101,7 +101,7 @@ async function loadList(){
         console.log("loading..")
     }while($("#_viewRoot:status").css('display') == 'block')
     */
-//    console.log($, global.$)
+   console.log(global.$)
 }
 
 async function extractData(url){
