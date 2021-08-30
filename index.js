@@ -162,14 +162,15 @@ void async function main(){
     document.getElementById("fPP:searchProcessos").click()
 
     await timer(500)
-    const $status = document.getElementById('_viewRoot:status')
+    const $status = document.getElementById('_viewRoot:status.start')
     do{
-        await timer(3000)
+        await timer(1000)
         console.log("loading..")
-        const $table = document.getElementById('fPP:processosTable:tb')
-        console.log($table.outerHTML)
-        console.log($status.style)
-    }while($($status).css('display') != 'block')
+    }while($($status).css('display') != 'none')
+    
+    const $table = document.getElementById('fPP:processosTable:tb')
+    const ids = $($table).find('tr>td:first').map( $td => $td.id )
+    console.log("process ids", ids)
     //fPP:processosTable:tb > tr > td:first > a
 
     // await saveJson2Mongo(testdata)
