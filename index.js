@@ -156,7 +156,14 @@ void async function main(){
     loadJquery(dom)
     // console.log()
     console.log(document.getElementById("fPP:searchProcessos").outerHTML)
-    // await timer(1000)
+    document.getElementById("fPP:searchProcessos").click()
+
+    await timer(1000)
+    const $status = document.getElementById('_viewRoot:status')
+    do{
+        await timer(1000)
+        console.log("loading..")
+    }while($($status).css('display') == 'block')
     // await saveJson2Mongo(testdata)
     // await getDatabase()
     // await extractData()
