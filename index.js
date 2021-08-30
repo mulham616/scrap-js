@@ -95,7 +95,7 @@ async function loadList(){
     });
     loadJquery(dom)
     // console.log()
-    // console.log(global.$("#fPP:searchProcessos").attr('id'))
+    console.log(global.$("#fPP:searchProcessos").attr('id'))
     /*
     $("#fPP:searchProcessos").click()
     do{
