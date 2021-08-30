@@ -118,7 +118,9 @@ async function extractData(url){
 }
 
 async function downloadFile(){
-
+    /**
+     * var a=function(){if (!confirm('Confirma o download do documento?')) return false;};var b=function(){if(typeof jsfcljs == 'function'){jsfcljs(document.getElementById('detalheDocumento'),{'detalheDocumento:download':'detalheDocumento:download'},'');}return false};return (a()==false) ? false : b();
+     */
 }
 
 async function saveJson2Mongo(data){
@@ -140,7 +142,6 @@ async function getDatabase(){
 }
 
 void async function main(){
-    const cookieJar = new jsdom.CookieJar(store, options);
     await login()
 
     await loadList()
