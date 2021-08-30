@@ -93,7 +93,7 @@ async function loadList(){
     });
     loadJquery(dom)
     // console.log()
-    console.log(global.$("#fPP:searchProcessos").attr('id'))
+    // console.log(global.$("#fPP:searchProcessos").attr('id'))
     /*
     $("#fPP:searchProcessos").click()
     do{
@@ -101,7 +101,7 @@ async function loadList(){
         console.log("loading..")
     }while($("#_viewRoot:status").css('display') == 'block')
     */
-   console.log(global.$)
+   console.log(dom.window.$)
 }
 
 async function extractData(url){
