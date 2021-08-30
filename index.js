@@ -62,8 +62,10 @@ async function login(){
     const request = axios(config)
     try{
         const response = await request
-        console.log(response.headers)
-        return true
+        const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
+        console.log("Login Success:", urls.loginUrl)
+        console.log("Cookie:", cookieString)
+        return cookieString
     }catch(e){
         console.log(e)
         return false
