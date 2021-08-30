@@ -13,6 +13,7 @@ const timer = util.promisify(setTimeout)
 require('./database/connect')
 const mongoose = require('mongoose')
 const axios_file_download = require('./helpers/download')
+const fs = require('fs')
 
 axiosCookieJarSupport(axios);
 
@@ -48,7 +49,8 @@ function loadJquery(dom){
     delete require.cache[require.resolve('jquery')]
     global.window = dom.window
     global.document = dom.window.document
-    global.$ = require('jquery')(global.window)
+    global.$ = require('jquery')
+    console.log($)
 }
 
 async function login(){
