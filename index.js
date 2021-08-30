@@ -164,6 +164,9 @@ void async function main(){
         await timer(1000)
         console.log("loading..")
     }while($($status).css('display') == 'block')
+    //fPP:processosTable:tb > tr > td:first > a
+    const $table = document.getElementById('fPP:processosTable:tb')
+    console.log($table.outerHTML)
     // await saveJson2Mongo(testdata)
     // await getDatabase()
     // await extractData()
