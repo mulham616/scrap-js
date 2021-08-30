@@ -91,8 +91,7 @@ async function loadList(){
         storageQuota: 10000000,
         runScripts: 'dangerously',
         resources: "usable",
-        cookieJar,
-        virtualConsole: 
+        cookieJar
     });
     fs.writeFileSync("test.html", dom.serialize())
     return new Promise((resolve, reject) => {
