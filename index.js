@@ -44,11 +44,13 @@ const defaultHeaders = {
 
 Object.assign(axios.defaults.headers, defaultHeaders)
 
+let $
+
 function loadJquery(dom){
     delete require.cache[require.resolve('jquery')]
     global.window = dom.window
     global.document = dom.window.document
-    global.$ = require('jquery')(global.window)
+    $ = global.$ = require('jquery')(global.window)
 }
 
 async function login(){
@@ -93,15 +95,15 @@ async function loadList(){
     });
     loadJquery(dom)
     // console.log()
-    /*
     console.log($("#fPP:searchProcessos").attr('id'))
+    /*
     $("#fPP:searchProcessos").click()
     do{
         await timer(1000)
         console.log("loading..")
     }while($("#_viewRoot:status").css('display') == 'block')
     */
-   console.log($, global.$)
+//    console.log($, global.$)
 }
 
 async function extractData(url){
