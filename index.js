@@ -153,12 +153,13 @@ void async function main(){
     await login()
 
     const dom = await loadList()
-    loadJquery(dom)
+    await timer(4000)
+    // loadJquery(dom)
     // console.log()
     console.log(document.getElementById("fPP:searchProcessos").outerHTML)
     document.getElementById("fPP:searchProcessos").click()
 
-    await timer(1000)
+    await timer(500)
     const $status = document.getElementById('_viewRoot:status')
     do{
         await timer(1000)
