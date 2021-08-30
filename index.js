@@ -155,7 +155,7 @@ void async function main(){
     const dom = await loadList()
     loadJquery(dom)
     // console.log()
-    console.log($("#fPP:searchProcessos").attr('id'))
+    console.log(document.getElementById("fPP:searchProcessos"))
     // await timer(1000)
     // await saveJson2Mongo(testdata)
     // await getDatabase()
