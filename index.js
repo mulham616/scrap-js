@@ -164,11 +164,11 @@ void async function main(){
     await timer(500)
     const $status = document.getElementById('_viewRoot:status')
     do{
-        await timer(5000)
+        await timer(3000)
         console.log("loading..")
         const $table = document.getElementById('fPP:processosTable:tb')
         console.log($table.outerHTML)
-    
+        console.log($status.style)
     }while($($status).css('display') != 'block')
     //fPP:processosTable:tb > tr > td:first > a
 
