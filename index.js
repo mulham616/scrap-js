@@ -101,97 +101,10 @@ async function loadList(){
         resources: "usable",
         cookieJar
     });
-    fs.writeFileSync("test.html", dom.serialize())
-    // return new Promise((resolve, reject) => {
-    //     dom.window.onload = resolve(dom)
-    // })
     return dom
-    /*
-    $("#fPP:searchProcessos").click()
-    do{
-        await timer(1000)
-        console.log("loading..")
-    }while($("#_viewRoot:status").css('display') == 'block')
-    */
-//    console.log(dom.window.$)
-}
-
-async function requestData(p_id){
-    const id = p_id.split(":")[2]
-    const data = qs.stringify({
-        'AJAXREQUEST': '_viewRoot',
-        'fPP:j_id150:nomeParte': '',
-        'fPP:j_id159:nomeAdvogado': '',
-        'tipoMascaraDocumento': 'on',
-        'fPP:dpDec:documentoParte': '',
-        'fPP:numeroProcesso:numeroSequencial': '', 
-        'fPP:numeroProcesso:numeroDigitoVerificador': '', 
-        'fPP:numeroProcesso:ano': '', 
-        'fPP:numeroProcesso:ramoJustica': 8,
-        'fPP:numeroProcesso:respectivoTribunal': 10,
-        'fPP:numeroProcesso:numeroOrgaoJustica': '', 
-        'fPP:processoReferenciaDecoration:habilitarMascaraProcessoReferencia': true,
-        'fPP:processoReferenciaDecoration:IdProcessoReferenciaComMascaraDecoration:IdProcessoReferenciaComMascara': '', 
-        'fPP:j_id233:assunto': '', 
-        'fPP:j_id242:classeJudicial': '', 
-        'fPP:j_id251:numeroDocumento': '', 
-        'fPP:decorationDados:numeroOAB': '', 
-        'fPP:decorationDados:letraOAB': '', 
-        'fPP:decorationDados:ufOABCombo': 'org.jboss.seam.ui.NoSelectionConverter.noSelectionValue',
-        'fPP:jurisdicaoComboDecoration:jurisdicaoCombo': 'org.jboss.seam.ui.NoSelectionConverter.noSelectionValue',
-        'fPP:orgaoJulgadorComboDecoration:orgaoJulgadorCombo': 'org.jboss.seam.ui.NoSelectionConverter.noSelectionValue',
-        'fPP:dataAutuacaoDecoration:dataAutuacaoInicioInputDate': '', 
-        'fPP:dataAutuacaoDecoration:dataAutuacaoInicioInputCurrentDate': '08/2021',
-        'fPP:dataAutuacaoDecoration:dataAutuacaoFimInputDate': '', 
-        'fPP:dataAutuacaoDecoration:dataAutuacaoFimInputCurrentDate': '08/2021',
-        'fPP:valorDaCausaDecoration:valorCausaInicial': '', 
-        'fPP:valorDaCausaDecoration:valorCausaFinal': '', 
-        'fPP:j_id414:movimentacaoProcessualSuggest': '', 
-        'fPP:j_id414:j_id427_selection': '', 
-        'fPP': 'fPP',
-        'autoScroll': '', 
-        'javax.faces.ViewState': 'j_id25',
-        'idProcessoSelecionado': id,
-        // 'fPP:processosTable:894603:j_id445': 'fPP:processosTable:894603:j_id445',
-        [p_id]: p_id,
-        'ajaxSingle': p_id,
-        'AJAX:EVENTS_COUNT': 1
-    })
-    const config = {
-        url: urls.listViewUrl,
-        method: 'post',
-        headers: { 
-            'referer': urls.listViewUrl,
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 
-            'Cookie': cookieJar.getCookieStringSync(urls.listViewUrl)
-        },
-        data : data + "&"
-    };
-    console.log('cookie', cookieJar)
-    const request = axios_jar(config)
-    console.log(data)
-    try{
-        const response = await request
-        console.log(response.config)
-        const cookieString = cookieJar.getCookieStringSync(urls.listViewUrl)
-        console.log('Login Success:', urls.listViewUrl)
-        console.log('Cookie:', cookieString)
-        console.log('html', response.data)
-        return cookieString
-    }catch(e){
-        // console.log(e)
-        return false
-    }
 }
 
 async function extractData(detail_url, p_id){
-    // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam#
-    // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=886456&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464
-    // <a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" 
-    // onclick="A4J.AJAX.Submit('fPP',event,{'similarityGroupingId':'fPP:processosTable:886456:j_id445','parameters':{'fPP:processosTable:886456:j_id445':'fPP:processosTable:886456:j_id445','idProcessoSelecionado':886456,'ajaxSingle':'fPP:processosTable:886456:j_id445'} } );return false;"
-    // title="0000034-76.2016.8.10.0125"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0000034-76.2016.8.10.0125</font></font></a><a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" onclick="A4J.AJAX.Submit('fPP',event,{'similarityGroupingId':'fPP:processosTable:886456:j_id445','parameters':{'fPP:processosTable:886456:j_id445':'fPP:processosTable:886456:j_id445','idProcessoSelecionado':886456,'ajaxSingle':'fPP:processosTable:886456:j_id445'} } );return false;" title="0000034-76.2016.8.10.0125"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0000034-76.2016.8.10.0125</font></font></a>
-    // fPP:processosTable:996954:j_id445
-    // fPP:processosTable:tb > tr > td:first > a
     p_id = p_id.split(":")[2]
     const dom = await JSDOM.fromURL(detail_url,
         {
@@ -204,35 +117,23 @@ async function extractData(detail_url, p_id){
             cookieJar
         }    
     )
-    console.log('wating for load')
-    // await (async function(){
-    //     return new Promise((resolve, reject) => {
-    //         dom.window.onload = resolve
-    //     })
-    // })()
-    console.log('loaded')
     const jsondata = {}
     jsondata.num_process = p_id
+
     /****** get details *******/
     fs.writeFileSync("1.html", dom.serialize())
-    $detail_div = dom.window.document.getElementById("maisDetalhes")
-    console.log('detail_div', $detail_div)
-    $dts = $detail_div.querySelectorAll("dt")
-    console.log(Array.from($dts), Array.from($dts).length)
-    jsondata.details = Array.from($dts).map($dt => 
+    loadJquery(dom)
+    $details = document.getElementById('maisDetalhes')
+    $dts = $details.querySelectorAll('dt')
+    console.log($details, Array.from($dts).length)
+    let details = Array.from($dts).map($dt => 
         ({
-            key: $dt.innerHTML,
-            value: $dt.nextSibling().innerHTML
+            key: $($dt).text().trim(),
+            value: $($dt.nextElementSibling).text().trim()
         })
     )
-    console.log(jsondata)
+    console.log(details)
     return jsondata
-}
-
-async function downloadFile(){
-    /**
-     * var a=function(){if (!confirm('Confirma o download do documento?')) return false;};var b=function(){if(typeof jsfcljs == 'function'){jsfcljs(document.getElementById('detalheDocumento'),{'detalheDocumento:download':'detalheDocumento:download'},'');}return false};return (a()==false) ? false : b();
-     */
 }
 
 async function saveJson2Mongo(data){
@@ -246,11 +147,6 @@ async function saveJson2Mongo(data){
     }catch(e){
         // console.error(e)
     }
-}
-
-async function getDatabase(){
-    const JsonData = mongoose.model('JsonData')
-    const datas = await JsonData.find()
 }
 
 void async function main(){
@@ -280,11 +176,11 @@ void async function main(){
         console.log($a)
         const detail_url = await (async function(){
             return new Promise(resolve => {
-                window.confirm = (text) => {
+                dom.window.confirm = (text) => {
                     console.log("confirm", text)
                     return true
                 }
-                window.open = (url, title, features) => {
+                dom.window.open = (url, title, features) => {
                     console.log("open new url", url)
                     resolve(url)
                 }
@@ -294,12 +190,6 @@ void async function main(){
         await timer(500)
         const jsondata = await extractData(detail_url, p_id)
     }
-    
-    //fPP:processosTable:tb > tr > td:first > a
-
-    // await saveJson2Mongo(testdata)
-    // await getDatabase()
-    // await extractData()
 }()
 
 const testdata = {
