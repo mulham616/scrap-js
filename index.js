@@ -272,7 +272,7 @@ void async function main(){
     const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id )
     console.log("process ids", ids)
     for( let p_id of ids ){
-        const $a = document.getElementById(p_id)
+        const $a = document.getElementsByName(p_id)[0]
         console.log($a)
         await (async function(){
             return new Promise(resolve => {
