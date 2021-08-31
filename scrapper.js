@@ -105,11 +105,12 @@ async function loadListView(){
     });
     return dom
 }
-async function downloadFile(){
+async function downloadFile(referer){
+    viewState = document.getElementById('javax.faces.ViewState').value
     var data = qs.stringify({
         'detalheDocumento': 'detalheDocumento',
         'autoScroll': '',
-        'javax.faces.ViewState': 'j_id7',
+        'javax.faces.ViewState': viewState,
         'detalheDocumento:download': 'detalheDocumento:download' 
       });
     axios_file_download({
@@ -117,7 +118,8 @@ async function downloadFile(){
         method: 'get',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Cookie': cookieJar.getCookieStringSync(urls.loginUrl)
+            'Cookie': cookieJar.getCookieStringSync(urls.loginUrl),
+            referer
         },
         data
     })
@@ -230,9 +232,11 @@ async function getProcessDetail(detail_url, p_id){
     jsondata.polo_passive = getPolo('Passivo')
     jsondata.events = getEvents()
     // jsondata.polo_passive = polo_passive
-    await downloadFile()
+    await timer(1000)
+    await downloadFile(detail_url)
     return jsondata
 }
+
 
 function getPolo(type){
     $poloDiv = document.getElementById(`polo${type}`)
