@@ -1,4 +1,3 @@
-require('dotenv').config()
 
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
@@ -288,13 +287,13 @@ function getEvents(){
     return events
 }
 
-void async function main(){
+async function scrap_process(processId){
     await login()
 
     const dom = await loadListView()
     loadJquery(dom)
     
-    const processId = process.argv[2] || '0800097-04.2017.8.10.0135'
+    // const processId = process.argv[2] || '0800097-04.2017.8.10.0135'
 
     setFilterProcessId(processId)
     await pressSearchBtn()
@@ -307,6 +306,8 @@ void async function main(){
     
     const jsondata = await getProcessDetail(detail_url, p_id)
     console.log(jsondata)
-    saveJson2Mongo(jsondata)
-}()
+    await saveJson2Mongo(jsondata)
+    return jsondata
+}
 
+exports.default = scrap_process
