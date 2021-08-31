@@ -273,6 +273,7 @@ void async function main(){
     console.log("process ids", ids)
     for( let p_id of ids ){
         const $a = document.getElementById(p_id)
+        console.log($a)
         await (async function(){
             return new Promise(resolve => {
                 window.confirm = (text) => {
