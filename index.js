@@ -218,6 +218,7 @@ async function extractData(detail_url, p_id){
     $detail_div = dom.window.document.getElementById("maisDetalhes")
     console.log('detail_div', $detail_div)
     $dts = $detail_div.querySelectorAll("dt")
+    console.log(Array.from($dts), Array.from($dts).length)
     jsondata.details = Array.from($dts).map($dt => 
         ({
             key: $dt.innerHTML,
