@@ -155,28 +155,28 @@ async function extractData(detail_url, p_id){
             })
         )
     }
-    $poloPassiveDiv = document.getElementById('poloPassivo')
-    $poloPassiveDiv = $poloPassiveDiv.querySelector('tbody tr:first-child td:first-child')
-    $firstline = $poloPassiveDiv.querySelector('span')
-    $parts = $poloPassiveDiv.querySelectorAll('ul li')
-    console.log(Array.from($parts).map(each => $(each).text().trim()))
-    firstline = $($firstline).text().trim()
-    parts = Array.from($parts).map(each => $(each).text().trim())
-    reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
-    matches = firstline.match(reg1)
-    let polo_passive = {
-        "name": matches[1], 
-        "CNPJ": matches[2], 
-        "type": matches[3],
-        "parts": parts.map(part => part.match(reg2)).map(
-            matches => ({
-                name: matches[1],
-                type: matches[2]
-            })
-        )
-    }
+    // $poloPassiveDiv = document.getElementById('poloPassivo')
+    // $poloPassiveDiv = $poloPassiveDiv.querySelector('tbody tr:first-child td:first-child')
+    // $firstline = $poloPassiveDiv.querySelector('span')
+    // $parts = $poloPassiveDiv.querySelectorAll('ul li')
+    // console.log(Array.from($parts).map(each => $(each).text().trim()))
+    // firstline = $($firstline).text().trim()
+    // parts = Array.from($parts).map(each => $(each).text().trim())
+    // reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
+    // matches = firstline.match(reg1)
+    // let polo_passive = {
+    //     "name": matches[1], 
+    //     "CNPJ": matches[2], 
+    //     "type": matches[3],
+    //     "parts": parts.map(part => part.match(reg2)).map(
+    //         matches => ({
+    //             name: matches[1],
+    //             type: matches[2]
+    //         })
+    //     )
+    // }
     jsondata.polo_active = polo_active
-    jsondata.polo_passive = polo_passive
+    // jsondata.polo_passive = polo_passive
     return jsondata
 }
 
