@@ -15,11 +15,17 @@ const mongoose = require('mongoose')
 const axios_file_download = require('./helpers/download')
 const fs = require('fs')
 
-axiosCookieJarSupport(axios);
+const axios_jar = axios.create({
+    // WARNING: This value will be ignored.
+    jar: new tough.CookieJar(),
+  });
+   
+
+axiosCookieJarSupport(axios_jar);
 
 const cookieJar = new tough.CookieJar();
 
-axios.defaults.jar = cookieJar
+axios_jar.defaults.jar = cookieJar
 
 const urls = {
     host: 'https://pje.tjma.jus.br',
@@ -44,7 +50,7 @@ const defaultHeaders = {
     'cache-control': 'max-age=0', 
 }
 
-Object.assign(axios.defaults.headers, defaultHeaders)
+Object.assign(axios_jar.defaults.headers, defaultHeaders)
 
 function loadJquery(dom){
     delete require.cache[require.resolve('jquery')]
@@ -72,7 +78,7 @@ async function login(){
         data : data
     };
 
-    const request = axios(config)
+    const request = axios_jar(config)
     try{
         const response = await request
         const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
@@ -154,14 +160,13 @@ async function requestData(p_id){
         url: urls.listViewUrl,
         method: 'post',
         headers: { 
-            
+            'referer': urls.listViewUrl,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 
         },
-        data : data,
-        jar: cookieJar
+        data : data
     };
-
-    const request = axios(config)
+    console.log('cookie', cookieJar)
+    const request = axios_jar(config)
     try{
         const response = await request
         const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
