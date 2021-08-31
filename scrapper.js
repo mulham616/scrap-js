@@ -120,12 +120,6 @@ async function downloadFile(dom){
     axios_file_download(url)
 }
 
-async function getEvents(dom){
-    const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
-    const eventdates = $timelineDiv.querySelectorAll(".media.data")
-    Array.from(eventdates)
-}
-
 async function saveJson2Mongo(data){
     const JsonData = mongoose.model('JsonData')
     const jsonData = new JsonData()
@@ -269,12 +263,22 @@ function getEvents(){
             description: $($date).next().find('.text-upper.texto-movimento').text().trim(),
             time: $($date).next().find('.col-sm-12 small.text-muted.pull-right').text().trim(),
             items: Array.from($($date).next().find('.anexos'))
-                .map($item => $($($item).children()[0]).text().trim())
-                .filter(text => text)
-                .map(text => text.match(/(\d)+ - (.*)/))
-                .map(matches => ({
+                .map($item => [$($($item).children()[0]).text().trim(), $($item).find('li')])
+                .filter(([text]) => text)
+                .map(([text, children]) => [text.match(/(\d+) - (.*)/), Array.from(children)])
+                .map(([matches, children]) => ({
                     number: matches[1],
-                    title: matches[2]
+                    title: matches[2],
+                    childs: 
+                        children.length ? 
+                        children.map( $child => $($child).text().trim() )
+                                .map( text => text.match(/(\d+) - (.*)/) )
+                                .map( matches => ({
+                                    number: matches[1],
+                                    title: matches[2]
+                                })) 
+                                : 
+                        undefined
                 }))
         }))
         .filter(each => each.date)

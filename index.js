@@ -30,3 +30,5 @@ app.use((req, res, next) => {
 });
 
 app.use("/", require('./routes'))
+
+module.exports = app
