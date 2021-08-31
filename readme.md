@@ -14,6 +14,6 @@ npm install
 The crawler provides intuitive interface to crawl links on web sites. Example:
 
 ```bash
-node index.js
+node index.js 2>nul
 ```
 
