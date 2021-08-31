@@ -15,6 +15,8 @@ const axios_file_download = require('./helpers/download')
 const fs = require('fs')
 const moment = require('moment')
 
+const virtualConsole = new jsdom.VirtualConsole();
+
 // const axios = axios.create({
 //     // WARNING: This value will be ignored.
 //     jar: new tough.CookieJar(),
@@ -99,7 +101,8 @@ async function loadListView(){
         storageQuota: 10000000,
         runScripts: 'dangerously',
         resources: "usable",
-        cookieJar
+        virtualConsole,
+        cookieJar,
     });
     return dom
 }
@@ -201,6 +204,7 @@ async function getProcessDetail(detail_url, p_id){
             storageQuota: 10000000,
             runScripts: 'dangerously',
             resources: "usable",
+            virtualConsole,
             cookieJar
         }    
     )
