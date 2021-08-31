@@ -162,7 +162,7 @@ async function requestData(p_id){
         headers: { 
             'referer': urls.listViewUrl,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 
-            'Cookie': cookieJar.getCookieStringSync(urls.loginUrl)
+            'Cookie': cookieJar.getCookieStringSync(urls.listViewUrl)
         },
         data : data
     };
@@ -170,8 +170,8 @@ async function requestData(p_id){
     const request = axios_jar(config)
     try{
         const response = await request
-        const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
-        console.log('Login Success:', urls.loginUrl)
+        const cookieString = cookieJar.getCookieStringSync(urls.listViewUrl)
+        console.log('Login Success:', urls.listViewUrl)
         console.log('Cookie:', cookieString)
         console.log('html', response.data)
         return cookieString
@@ -190,7 +190,9 @@ async function extractData(p_id){
     // fPP:processosTable:996954:j_id445
     // fPP:processosTable:tb > tr > td:first > a
     p_id = p_id.split(":")[2]
-    const dom = await JSDOM.fromURL(`https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=${p_id}&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464`,
+    const url = `${urls.detailViewUrl}?id=${p_id}&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464`
+    console.log(url)
+    const dom = await JSDOM.fromURL(url,
         {
             referrer: urls.loginUrl,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
