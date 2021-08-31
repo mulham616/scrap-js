@@ -132,7 +132,51 @@ async function extractData(detail_url, p_id){
             value: $($dt.nextElementSibling).text().trim()
         })
     )
-    console.log(details)
+    // console.log(details)
+    jsondata.details = details
+    /******** polo active ********/
+    let $poloActiveDiv = document.getElementById('poloAtivo')
+    $poloActiveDiv = $poloActiveDiv.querySelector('tbody tr:first-child td:first-child')
+    let $firstline = $poloActiveDiv.querySelector('span')
+    let $parts = $poloActiveDiv.querySelectorAll('ul li')
+    console.log(Array.from($parts).map(each => $(each).text().trim()))
+    let firstline = $($firstline).text().trim()
+    let parts = Array.from($parts).map(each => $(each).text().trim())
+    let reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
+    let matches = firstline.match(reg1)
+    let polo_active = {
+        "name": matches[1], 
+        "CNPJ": matches[2], 
+        "type": matches[3],
+        "parts": parts.map(part => part.match(reg2)).map(
+            matches => ({
+                name: matches[1],
+                type: matches[2]
+            })
+        )
+    }
+    $poloPassiveDiv = document.getElementById('poloPassivo')
+    $poloPassiveDiv = $poloPassiveDiv.querySelector('tbody tr:first-child td:first-child')
+    $firstline = $poloPassiveDiv.querySelector('span')
+    $parts = $poloPassiveDiv.querySelectorAll('ul li')
+    console.log(Array.from($parts).map(each => $(each).text().trim()))
+    firstline = $($firstline).text().trim()
+    parts = Array.from($parts).map(each => $(each).text().trim())
+    reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
+    matches = firstline.match(reg1)
+    let polo_passive = {
+        "name": matches[1], 
+        "CNPJ": matches[2], 
+        "type": matches[3],
+        "parts": parts.map(part => part.match(reg2)).map(
+            matches => ({
+                name: matches[1],
+                type: matches[2]
+            })
+        )
+    }
+    jsondata.polo_active = polo_active
+    jsondata.polo_passive = polo_passive
     return jsondata
 }
 
@@ -188,52 +232,8 @@ void async function main(){
             })
         })()
         await timer(500)
+        
         const jsondata = await extractData(detail_url, p_id)
+        console.log(jsondata)
     }
 }()
-
-const testdata = {
-    "num_process": "0800097-04.2017.8.10.0135",
-    "details": [
-        { "key": "Classe judicial", "value": "EXECUÇÃO DE TÍTULO EXTRAJUDICIAL (159)" },
-        { "key": "Jurisdição", "value": "Fórum da Comarca de Tuntum" },
-        { "key": "Valor da causa", "value": "R$ 1.916,50" },
-    ],
-    "polo_active": {
-        "name": "AUDIOLAR MOVEIS E ELETROS LTDA", 
-        "CNPJ": "11.828.573/0001-24", 
-        "type": "EXEQUENTE",
-        "parts": [
-            {"name": "GEORGE MUNIZ RIBEIRO REIS", "type": "ADVOGADO" },
-            {"name": "SARA MANUELE COSTA DOS REIS", "type": "ADVOGADO" }
-        ]
-    },
-    "polo_passivo": {
-        "name": "ADRIANO HENRIQUE ANDRADE SANTOS - ME", 
-        "CNPJ": "24.563.772/0001-08", 
-        "type": "EXECUTADO",
-        "parts": []
-    },
-    "events": [
-        { 
-            "date": "07/08/2021 03:06", 
-            "description": "DECORRIDO PRAZO DE ADRIANO HENRIQUE ANDRADE SANTOS - ME EM 21/07/2021 23:59.",
-            "items": []
-        },
-        { 
-            "date": "15/08/2021 16:57", 
-            "description": "",
-            "items": [
-                { 
-                    "number": "49137915", 
-                    "title": "Petição", 
-                    file: "", 
-                    childs: [
-                        { "number": "49137917", "title": "Petição (Petição Habilitação Processo)", file: "/asdasd.pdf" },
-                        { "number": "49137919", "title": "Procuração (Doc. 01 Procuração Audiolar Moveis Atualizada)", file: "/asdasd.pdf" },
-                    ]						
-                }
-            ]
-        }
-    ]
-}
