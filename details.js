@@ -47,8 +47,8 @@ function getEvents(){
         }))
         .filter(each => each.date)
         .map(each => ({ 
-            description: each.description, 
             date:moment(each.date, 'DD MMM YYYY').format('DD/MM/YYYY') + " " + each.time,
+            description: each.description, 
             items: []
         }))
     console.log(events)
