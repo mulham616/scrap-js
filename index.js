@@ -279,7 +279,9 @@ void async function main(){
     const dom = await loadListView()
     loadJquery(dom)
     
-    setFilterProcessId('0800097-04.2017.8.10.0135')
+    const processId = process.argv[2] || '0800097-04.2017.8.10.0135'
+
+    setFilterProcessId(processId)
     await pressSearchBtn()
     await waitLoading()
     const $a = findLinkElement()

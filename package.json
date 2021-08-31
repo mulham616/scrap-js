@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js 0800097-04.2017.8.10.0135 2>nul",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
