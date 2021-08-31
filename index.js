@@ -155,9 +155,10 @@ async function requestData(p_id){
         method: 'post',
         headers: { 
             
-            'Content-Type': 'application/x-www-form-urlencoded', 
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 
         },
-        data : data
+        data : data,
+        jar: cookieJar
     };
 
     const request = axios(config)
