@@ -1,5 +1,6 @@
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
+const moment = require('moment')
 
 function loadJquery(dom){
     delete require.cache[require.resolve('jquery')]
@@ -7,6 +8,30 @@ function loadJquery(dom){
     global.document = dom.window.document
     global.$ = require('jquery')
     // console.log($)
+}
+
+function getPolo(type){
+    $poloDiv = document.getElementById(`polo${type}`)
+    $poloDiv = $poloDiv.querySelector('tbody tr:first-child td:first-child')
+    let $firstline = $poloDiv.querySelector('span')
+    let $parts = $poloDiv.querySelectorAll('ul li')
+    console.log(Array.from($parts).map(each => $(each).text().trim()))
+    let firstline = $($firstline).text().trim()
+    let parts = Array.from($parts).map(each => $(each).text().trim())
+    let reg1 = /(.*) - (.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
+    let matches = firstline.match(reg1)
+    let polo = {
+        "name": matches[1], 
+        [matches[2]]: matches[3],  //CNPJ
+        "type": matches[4],
+        "parts": parts.map(part => part.match(reg2)).map(
+            matches => ({
+                name: matches[1],
+                type: matches[2]
+            })
+        )
+    }
+    return polo
 }
 
 void async function main(){
@@ -25,26 +50,29 @@ void async function main(){
         })
     )
     console.log(details)
-
-    $poloActiveDiv = document.getElementById('poloAtivo')
-    $poloActiveDiv = $poloActiveDiv.querySelector('tbody tr:first-child td:first-child')
-    let $firstline = $poloActiveDiv.querySelector('span')
-    let $parts = $poloActiveDiv.querySelectorAll('ul li')
-    console.log(Array.from($parts).map(each => $(each).text().trim()))
-    let firstline = $($firstline).text().trim()
-    let parts = Array.from($parts).map(each => $(each).text().trim())
-    let reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
-    let matches = firstline.match(reg1)
-    let polo_active = {
-        "name": matches[1], 
-        "CNPJ": matches[2], 
-        "type": matches[3],
-        "parts": parts.map(part => part.match(reg2)).map(
-            matches => ({
-                name: matches[1],
-                type: matches[2]
-            })
-        )
-    }
-    console.log(polo_active)
+    console.log('poloActive', getPolo('Ativo'))
+    console.log('poloPassive', getPolo('Passivo'))
+    const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
+    const eventdates = $timelineDiv.querySelectorAll(".media.data")
+    moment.locale('pt')
+    const events = Array.from(eventdates).map(date => $(date).text().trim())
+        .filter(each => each)
+        .map(each => moment(each, 'DD MMM YYYY').format('DD/MM/YYYY'))
+        .map(date => (
+        {
+            date: date
+        }
+    ))
+    console.log(events)
 }()
+
+/*
+media interno
+
+description
+
+divTimeLine:j_id297:0:j_id299:0:j_id301
+text-upper texto-movimento
+
+
+*/

@@ -15,17 +15,17 @@ const mongoose = require('mongoose')
 const axios_file_download = require('./helpers/download')
 const fs = require('fs')
 
-const axios_jar = axios.create({
-    // WARNING: This value will be ignored.
-    jar: new tough.CookieJar(),
-  });
+// const axios = axios.create({
+//     // WARNING: This value will be ignored.
+//     jar: new tough.CookieJar(),
+//   });
    
 
-axiosCookieJarSupport(axios_jar);
+axiosCookieJarSupport(axios);
 
 const cookieJar = new tough.CookieJar();
 
-axios_jar.defaults.jar = cookieJar
+axios.defaults.jar = cookieJar
 
 const urls = {
     host: 'https://pje.tjma.jus.br',
@@ -50,7 +50,7 @@ const defaultHeaders = {
     'cache-control': 'max-age=0', 
 }
 
-Object.assign(axios_jar.defaults.headers, defaultHeaders)
+Object.assign(axios.defaults.headers, defaultHeaders)
 
 function loadJquery(dom){
     delete require.cache[require.resolve('jquery')]
@@ -78,7 +78,7 @@ async function login(){
         data : data
     };
 
-    const request = axios_jar(config)
+    const request = axios(config)
     try{
         const response = await request
         const cookieString = cookieJar.getCookieStringSync(urls.loginUrl)
@@ -134,20 +134,28 @@ async function extractData(detail_url, p_id){
     )
     // console.log(details)
     jsondata.details = details
-    /******** polo active ********/
-    let $poloActiveDiv = document.getElementById('poloAtivo')
-    $poloActiveDiv = $poloActiveDiv.querySelector('tbody tr:first-child td:first-child')
-    let $firstline = $poloActiveDiv.querySelector('span')
-    let $parts = $poloActiveDiv.querySelectorAll('ul li')
+
+    /******** polo ********/
+    jsondata.polo_active = getPolo('Ativo')
+    jsondata.polo_passive = getPolo('Passivo')
+    // jsondata.polo_passive = polo_passive
+    return jsondata
+}
+
+function getPolo(type){
+    $poloDiv = document.getElementById(`polo${type}`)
+    $poloDiv = $poloDiv.querySelector('tbody tr:first-child td:first-child')
+    let $firstline = $poloDiv.querySelector('span')
+    let $parts = $poloDiv.querySelectorAll('ul li')
     console.log(Array.from($parts).map(each => $(each).text().trim()))
     let firstline = $($firstline).text().trim()
     let parts = Array.from($parts).map(each => $(each).text().trim())
-    let reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
+    let reg1 = /(.*) - (.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
     let matches = firstline.match(reg1)
-    let polo_active = {
+    let polo = {
         "name": matches[1], 
-        "CNPJ": matches[2], 
-        "type": matches[3],
+        [matches[2]]: matches[3],  //CNPJ
+        "type": matches[4],
         "parts": parts.map(part => part.match(reg2)).map(
             matches => ({
                 name: matches[1],
@@ -155,29 +163,30 @@ async function extractData(detail_url, p_id){
             })
         )
     }
-    // $poloPassiveDiv = document.getElementById('poloPassivo')
-    // $poloPassiveDiv = $poloPassiveDiv.querySelector('tbody tr:first-child td:first-child')
-    // $firstline = $poloPassiveDiv.querySelector('span')
-    // $parts = $poloPassiveDiv.querySelectorAll('ul li')
-    // console.log(Array.from($parts).map(each => $(each).text().trim()))
-    // firstline = $($firstline).text().trim()
-    // parts = Array.from($parts).map(each => $(each).text().trim())
-    // reg1 = /(.*): (.*) \((.*)\)/, reg2 = /(.*) \((.*)\)/
-    // matches = firstline.match(reg1)
-    // let polo_passive = {
-    //     "name": matches[1], 
-    //     "CNPJ": matches[2], 
-    //     "type": matches[3],
-    //     "parts": parts.map(part => part.match(reg2)).map(
-    //         matches => ({
-    //             name: matches[1],
-    //             type: matches[2]
-    //         })
-    //     )
-    // }
-    jsondata.polo_active = polo_active
-    // jsondata.polo_passive = polo_passive
-    return jsondata
+    return polo
+}
+
+async function downloadFile(dom){
+    $download = document.getElementById('detalheDocumento:download')
+    const downloadurl = await (function(){
+        return new Promise((resolve, reject) => {
+            dom.window.confirm = (text) => {
+                console.log('download confirm:', text)
+            }
+            dom.window.open = (url, title, features) => {
+                console.log(url, title)
+                resolve(url)
+            }
+            $download.click()
+        })
+    })()
+    axios_file_download(url)
+}
+
+async function getEvents(dom){
+    const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
+    const eventdates = $timelineDiv.querySelectorAll(".media.data")
+    Array.from(eventdates)
 }
 
 async function saveJson2Mongo(data){
@@ -225,7 +234,7 @@ void async function main(){
                     return true
                 }
                 dom.window.open = (url, title, features) => {
-                    console.log("open new url", url)
+                    // console.log("open new url", url)
                     resolve(url)
                 }
                 $a.click()
