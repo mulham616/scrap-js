@@ -162,6 +162,7 @@ async function requestData(p_id){
         headers: { 
             'referer': urls.listViewUrl,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 
+            'Cookie': cookieJar.getCookieStringSync(urls.loginUrl)
         },
         data : data
     };
