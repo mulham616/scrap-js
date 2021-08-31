@@ -105,7 +105,6 @@ async function loadListView(){
     });
     return dom
 }
-
 async function downloadFile(){
     var data = qs.stringify({
         'detalheDocumento': 'detalheDocumento',
@@ -114,9 +113,8 @@ async function downloadFile(){
         'detalheDocumento:download': 'detalheDocumento:download' 
       });
     axios_file_download(
+        'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam',
         {
-            url: 'https://speed.hetzner.de/100MB.bin',
-            method: 'get',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
