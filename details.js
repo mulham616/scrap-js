@@ -39,7 +39,6 @@ function getEvents(){
     const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
     const $eventdates = Array.from($timelineDiv.querySelectorAll(".media.data"))
     moment.locale('pt')
-    const $eventdetails = $eventdates.map($date => $($date).next())
     const events = $eventdates
         .map($date => ({
             date: $($date).text().trim(), 
