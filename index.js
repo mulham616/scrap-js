@@ -269,10 +269,10 @@ void async function main(){
     }while($($status).css('display') != 'none')
     
     const $table = document.getElementById('fPP:processosTable:tb')
-    const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id )
+    const $as = Array.from($($table).find('tr>td:first-child')).map( $td => $td.querySelector('a') )
     console.log("process ids", ids)
-    for( let p_id of ids ){
-        const $a = document.getElementsByName(p_id)[0]
+    for( let $a of $as ){
+        const p_id = $a.id
         console.log($a)
         await (async function(){
             return new Promise(resolve => {
