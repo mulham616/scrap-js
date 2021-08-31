@@ -129,6 +129,7 @@ async function getEvents(dom){
 
 async function saveJson2Mongo(data){
     const JsonData = mongoose.model('JsonData')
+    await JsonData.findOneAndRemove({ num_process: data.num_process})
     const jsonData = new JsonData()
     jsonData.num_process = data.num_process
     jsonData.json = data
