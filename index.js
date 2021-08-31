@@ -183,7 +183,7 @@ async function requestData(p_id){
     }
 }
 
-async function extractData(p_id){
+async function extractData(detail_url){
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam#
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=886456&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464
     // <a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" 
@@ -192,7 +192,7 @@ async function extractData(p_id){
     // fPP:processosTable:996954:j_id445
     // fPP:processosTable:tb > tr > td:first > a
     p_id = p_id.split(":")[2]
-    const url = `${urls.detailViewUrl}?id=${p_id}&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464`
+    const url = `detail_url`
     console.log(url)
     const dom = await JSDOM.fromURL(url,
         {
@@ -205,17 +205,19 @@ async function extractData(p_id){
             cookieJar
         }    
     )
+    console.log('wating for load')
     await (async function(){
         return new Promise((resolve, reject) => {
             dom.window.onload = resolve
         })
     })()
-    loadJquery(dom)
+    console.log('loaded')
     const jsondata = {}
     jsondata.num_process = p_id
     /****** get details *******/
-    $detail_div = document.getElementById("num_process")
-    jsondata.details = Array.from($($detail_div).find("dt")).map($dt => 
+    $detail_div = dom.window.document.getElementById("num_process")
+    console.log('detail_div', $detail_div)
+    jsondata.details = Array.from($detail_div.querySelectorAll("dt")).map($dt => 
         ({
             key: $dt.innerHTML,
             value: $dt.nextSibling().innerHTML
@@ -274,7 +276,7 @@ void async function main(){
     for( let $a of $as ){
         const p_id = $a.id
         console.log($a)
-        await (async function(){
+        const detail_url = await (async function(){
             return new Promise(resolve => {
                 window.confirm = (text) => {
                     console.log("confirm", text)
@@ -282,13 +284,13 @@ void async function main(){
                 }
                 window.open = (url, title, features) => {
                     console.log("open new url", url)
-                    resolve()
+                    resolve(url)
                 }
                 $a.click()
             })
         })()
         await timer(500)
-        // const jsondata = await extractData(p_id)
+        const jsondata = await extractData(detail_url)
     }
     
     //fPP:processosTable:tb > tr > td:first > a
