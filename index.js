@@ -229,6 +229,7 @@ async function getProcessDetail(detail_url, p_id){
     /******** polo ********/
     jsondata.polo_active = getPolo('Ativo')
     jsondata.polo_passive = getPolo('Passivo')
+    jsondata.events = getEvents()
     // jsondata.polo_passive = polo_passive
     return jsondata
 }
@@ -257,6 +258,21 @@ function getPolo(type){
     return polo
 }
 
+function getEvents(){
+    const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
+    const eventdates = Array.from($timelineDiv.querySelectorAll(".media.data"))
+    moment.locale('pt')
+    const events = eventdates.map(date => $(date).text().trim())
+        .filter(each => each)
+        .map(each => moment(each, 'DD MMM YYYY').format('DD/MM/YYYY'))
+        .map(date => (
+        {
+            date: date
+        }
+    ))
+    return events
+}
+
 void async function main(){
     await login()
 
@@ -274,5 +290,6 @@ void async function main(){
     
     const jsondata = await getProcessDetail(detail_url, p_id)
     console.log(jsondata)
+    saveJson2Mongo(jsondata)
 }()
 
