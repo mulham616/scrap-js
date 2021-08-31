@@ -164,14 +164,14 @@ async function requestData(p_id){
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 
             'Cookie': cookieJar.getCookieStringSync(urls.listViewUrl)
         },
-        data : data
+        data : data + "&"
     };
     console.log('cookie', cookieJar)
     const request = axios_jar(config)
     console.log(data)
     try{
         const response = await request
-        console.log(response.request.headers)
+        console.log(response.config)
         const cookieString = cookieJar.getCookieStringSync(urls.listViewUrl)
         console.log('Login Success:', urls.listViewUrl)
         console.log('Cookie:', cookieString)
@@ -272,9 +272,21 @@ void async function main(){
     const ids = Array.from($($table).find('tr>td:first-child')).map( $td => $td.id )
     console.log("process ids", ids)
     for( let p_id of ids ){
-        await requestData(p_id)
+        const $a = document.getElementById(p_id)
+        await (async function(){
+            return new Promise(resolve => {
+                window.confirm = (text) => {
+                    console.log("confirm", text)
+                    return true
+                }
+                window.open = (url, title, features) => {
+                    console.log("open new url", url)
+                    resolve()
+                }
+            })
+        })()
         await timer(500)
-        const jsondata = await extractData(p_id)
+        // const jsondata = await extractData(p_id)
     }
     
     //fPP:processosTable:tb > tr > td:first > a
