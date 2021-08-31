@@ -117,6 +117,7 @@ async function downloadFile(){
         method: 'get',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie': cookieJar.getCookieStringSync(urls.loginUrl)
         },
         data
     })
