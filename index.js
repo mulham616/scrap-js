@@ -121,7 +121,6 @@ async function extractData(detail_url, p_id){
     jsondata.num_process = p_id
 
     /****** get details *******/
-    fs.writeFileSync("1.html", dom.serialize())
     loadJquery(dom)
     $details = document.getElementById('maisDetalhes')
     $dts = $details.querySelectorAll('dt')
