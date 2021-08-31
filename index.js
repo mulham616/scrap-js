@@ -184,11 +184,11 @@ function findLinkElement(){
 
 async function getProcessDetailUrl($a){
     return new Promise(resolve => {
-        dom.window.confirm = (text) => {
+        window.confirm = (text) => {
             console.log("confirm", text)
             return true
         }
-        dom.window.open = (url, title, features) => {
+        window.open = (url, title, features) => {
             // console.log("open new url", url)
             resolve(url)
         }
