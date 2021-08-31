@@ -270,7 +270,7 @@ void async function main(){
     
     const $table = document.getElementById('fPP:processosTable:tb')
     const $as = Array.from($($table).find('tr>td:first-child')).map( $td => $td.querySelector('a') )
-    console.log("process ids", ids)
+    console.log("process ids", $as)
     for( let $a of $as ){
         const p_id = $a.id
         console.log($a)
