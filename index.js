@@ -29,4 +29,4 @@ app.use((req, res, next) => {
   next();
 });
 
-require('./routes')(app)
+app.use("/", require('./routes'))
