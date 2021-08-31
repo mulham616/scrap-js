@@ -124,7 +124,7 @@ async function extractData(detail_url, p_id){
     loadJquery(dom)
     $details = document.getElementById('maisDetalhes')
     $dts = $details.querySelectorAll('dt')
-    console.log($details, Array.from($dts).length)
+    console.log($details.id, Array.from($dts).map($dt => $($dt).text().trim()))
     let details = Array.from($dts).map($dt => 
         ({
             key: $($dt).text().trim(),
@@ -222,7 +222,7 @@ void async function main(){
     
     const $table = document.getElementById('fPP:processosTable:tb')
     const $as = Array.from($($table).find('tr>td:first-child')).map( $td => $td.querySelector('a') )
-    console.log("process ids", $as)
+    console.log("process ids", $as.map($a => $a.id))
     for( let $a of $as ){
         const p_id = $a.id
         console.log($a)
