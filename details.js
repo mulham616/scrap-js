@@ -45,12 +45,22 @@ function getEvents(){
             description: $($date).next().find('.text-upper.texto-movimento').text().trim(),
             time: $($date).next().find('.col-sm-12 small.text-muted.pull-right').text().trim(),
             items: Array.from($($date).next().find('.anexos'))
-                .map($item => $($($item).children()[0]).text().trim())
-                .filter(text => text)
-                .map(text => text.match(/(\d)+ - (.*)/))
-                .map(matches => ({
+                .map($item => [$($($item).children()[0]).text().trim(), $($item).find('li')])
+                .filter(([text]) => text)
+                .map(([text, children]) => [text.match(/(\d+) - (.*)/), Array.from(children)])
+                .map(([matches, children]) => ({
                     number: matches[1],
-                    title: matches[2]
+                    title: matches[2],
+                    childs: 
+                        children.length ? 
+                        children.map( $child => $($child).text().trim() )
+                                .map( text => text.match(/(\d+) - (.*)/) )
+                                .map( matches => ({
+                                    number: matches[1],
+                                    title: matches[2]
+                                })) 
+                                : 
+                        undefined
                 }))
         }))
         .filter(each => each.date)
