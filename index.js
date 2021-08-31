@@ -102,9 +102,10 @@ async function loadList(){
         cookieJar
     });
     fs.writeFileSync("test.html", dom.serialize())
-    return new Promise((resolve, reject) => {
-        dom.window.onload = resolve(dom)
-    })
+    // return new Promise((resolve, reject) => {
+    //     dom.window.onload = resolve(dom)
+    // })
+    return dom
     /*
     $("#fPP:searchProcessos").click()
     do{
@@ -204,11 +205,11 @@ async function extractData(detail_url, p_id){
         }    
     )
     console.log('wating for load')
-    await (async function(){
-        return new Promise((resolve, reject) => {
-            dom.window.onload = resolve
-        })
-    })()
+    // await (async function(){
+    //     return new Promise((resolve, reject) => {
+    //         dom.window.onload = resolve
+    //     })
+    // })()
     console.log('loaded')
     const jsondata = {}
     jsondata.num_process = p_id
