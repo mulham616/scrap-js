@@ -192,9 +192,8 @@ async function extractData(detail_url, p_id){
     // fPP:processosTable:996954:j_id445
     // fPP:processosTable:tb > tr > td:first > a
     p_id = p_id.split(":")[2]
-    const url = `detail_url`
     console.log(url)
-    const dom = await JSDOM.fromURL(url,
+    const dom = await JSDOM.fromURL(detail_url,
         {
             referrer: urls.loginUrl,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
