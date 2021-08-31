@@ -9,4 +9,4 @@ router.get('/collect/:num_process', async (req, resp) => {
     resp.send(json)
 })
 
-exports.default = router
+module.exports = router

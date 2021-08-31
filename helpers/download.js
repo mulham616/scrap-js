@@ -18,4 +18,4 @@ async function axios_file_download(url, filename){
     })
 }
 
-exports.default = axios_file_download
+module.exports = axios_file_download
