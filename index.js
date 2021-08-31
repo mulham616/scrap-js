@@ -243,6 +243,6 @@ void async function main(){
         
         const jsondata = await extractData(detail_url, p_id)
         console.log(jsondata)
-        saveJson2Mongo(jsondata)
+        // saveJson2Mongo(jsondata)
     }
 }()
