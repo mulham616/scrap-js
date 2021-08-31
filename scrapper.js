@@ -310,4 +310,4 @@ async function scrap_process(processId){
     return jsondata
 }
 
-exports.default = scrap_process
+module.exports = scrap_process
