@@ -183,7 +183,7 @@ async function requestData(p_id){
     }
 }
 
-async function extractData(detail_url){
+async function extractData(detail_url, p_id){
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/listView.seam#
     // https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam?id=886456&ca=c5e3ac05ece2d990b79a4a108d59ae9042b917272a53aa7787025d9504ca6a895abb21735389dfa5e81c2aab3a504464
     // <a class="btn-link btn-condensed" href="#" id="fPP:processosTable:886456:j_id445" name="fPP:processosTable:886456:j_id445" 
@@ -290,7 +290,7 @@ void async function main(){
             })
         })()
         await timer(500)
-        const jsondata = await extractData(detail_url)
+        const jsondata = await extractData(detail_url, p_id)
     }
     
     //fPP:processosTable:tb > tr > td:first > a
