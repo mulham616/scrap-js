@@ -91,7 +91,7 @@ async function login(){
     }
 }
 
-async function loadList(){
+async function loadListView(){
     const dom = await JSDOM.fromURL(urls.listViewUrl, {
         referrer: urls.loginUrl,
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
@@ -103,8 +103,99 @@ async function loadList(){
     });
     return dom
 }
+async function downloadFile(dom){
+    $download = document.getElementById('detalheDocumento:download')
+    const downloadurl = await (function(){
+        return new Promise((resolve, reject) => {
+            dom.window.confirm = (text) => {
+                console.log('download confirm:', text)
+            }
+            dom.window.open = (url, title, features) => {
+                console.log(url, title)
+                resolve(url)
+            }
+            $download.click()
+        })
+    })()
+    axios_file_download(url)
+}
 
-async function extractData(detail_url, p_id){
+async function getEvents(dom){
+    const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
+    const eventdates = $timelineDiv.querySelectorAll(".media.data")
+    Array.from(eventdates)
+}
+
+async function saveJson2Mongo(data){
+    const JsonData = mongoose.model('JsonData')
+    const jsonData = new JsonData()
+    jsonData.num_process = data.num_process
+    jsonData.json = data
+    try{
+        await jsonData.save()
+        console.log("process saved:", data.num_process)
+    }catch(e){
+        // console.error(e)
+    }
+}
+
+function setFilterProcessId(pId){
+    const inputIds = [
+        "fPP:numeroProcesso:numeroSequencial",
+        "fPP:numeroProcesso:numeroDigitoVerificador",
+        "fPP:numeroProcesso:ano",
+        "fPP:numeroProcesso:ramoJustica",
+        "fPP:numeroProcesso:respectivoTribunal",
+        "fPP:numeroProcesso:numeroOrgaoJustica",
+    ]
+    const reg = /\d+-\d+\.\d+.\d+.\d+.\d+/
+    const matches = pId.match(reg)
+    for(let i = 0; i < inputIds.length; i++){
+        let $input = document.getElementById(inputIds[i])
+        $($input).val(matches[i])
+    }
+}
+
+async function pressSearchBtn(){
+    do{
+        await timer(1000)
+    }while(!window.executarReCaptcha)
+    // console.log()
+    console.log(document.getElementById("fPP:searchProcessos").outerHTML)
+    document.getElementById("fPP:searchProcessos").click()
+    await timer(500)
+}
+
+async function waitLoading(){
+    const $status = document.getElementById('_viewRoot:status.start')
+    do{
+        await timer(1000)
+        console.log("loading..")
+    }while($($status).css('display') != 'none')
+}
+
+function findLinkElement(){
+    const $table = document.getElementById('fPP:processosTable:tb')
+    const $as = Array.from($($table).find('tr>td:first-child')).map( $td => $td.querySelector('a') )
+    console.log("process ids", $as.map($a => $a.id))
+    return $as[0]
+}
+
+async function getProcessDetailUrl($a){
+    return new Promise(resolve => {
+        dom.window.confirm = (text) => {
+            console.log("confirm", text)
+            return true
+        }
+        dom.window.open = (url, title, features) => {
+            // console.log("open new url", url)
+            resolve(url)
+        }
+        $a.click()
+    })
+}
+
+async function getProcessDetail(detail_url, p_id){
     p_id = p_id.split(":")[2]
     const dom = await JSDOM.fromURL(detail_url,
         {
@@ -165,84 +256,22 @@ function getPolo(type){
     return polo
 }
 
-async function downloadFile(dom){
-    $download = document.getElementById('detalheDocumento:download')
-    const downloadurl = await (function(){
-        return new Promise((resolve, reject) => {
-            dom.window.confirm = (text) => {
-                console.log('download confirm:', text)
-            }
-            dom.window.open = (url, title, features) => {
-                console.log(url, title)
-                resolve(url)
-            }
-            $download.click()
-        })
-    })()
-    axios_file_download(url)
-}
-
-async function getEvents(dom){
-    const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
-    const eventdates = $timelineDiv.querySelectorAll(".media.data")
-    Array.from(eventdates)
-}
-
-async function saveJson2Mongo(data){
-    const JsonData = mongoose.model('JsonData')
-    const jsonData = new JsonData()
-    jsonData.num_process = data.num_process
-    jsonData.json = data
-    try{
-        await jsonData.save()
-        console.log("process saved:", data.num_process)
-    }catch(e){
-        // console.error(e)
-    }
-}
-
 void async function main(){
     await login()
 
-    const dom = await loadList()
+    const dom = await loadListView()
     loadJquery(dom)
-    do{
-        await timer(1000)
-    }while(!window.executarReCaptcha)
-    // console.log()
-    console.log(document.getElementById("fPP:searchProcessos").outerHTML)
-    document.getElementById("fPP:searchProcessos").click()
-
-    await timer(500)
-    const $status = document.getElementById('_viewRoot:status.start')
-    do{
-        await timer(1000)
-        console.log("loading..")
-    }while($($status).css('display') != 'none')
     
-    const $table = document.getElementById('fPP:processosTable:tb')
-    const $as = Array.from($($table).find('tr>td:first-child')).map( $td => $td.querySelector('a') )
-    console.log("process ids", $as.map($a => $a.id))
-    for( let $a of $as ){
-        const p_id = $a.id
-        console.log($a)
-        const detail_url = await (async function(){
-            return new Promise(resolve => {
-                dom.window.confirm = (text) => {
-                    console.log("confirm", text)
-                    return true
-                }
-                dom.window.open = (url, title, features) => {
-                    // console.log("open new url", url)
-                    resolve(url)
-                }
-                $a.click()
-            })
-        })()
-        await timer(500)
-        
-        const jsondata = await extractData(detail_url, p_id)
-        console.log(jsondata)
-        // saveJson2Mongo(jsondata)
-    }
+    setFilterProcessId('0800097-04.2017.8.10.0135')
+    await pressSearchBtn()
+    await waitLoading()
+    const $a = findLinkElement()
+    const p_id = $a.id
+    console.log("process_id:", p_id)
+    const detail_url = await getProcessDetailUrl($a)
+    await timer(500)
+    
+    const jsondata = await getProcessDetail(detail_url, p_id)
+    console.log(jsondata)
 }()
+
