@@ -214,6 +214,7 @@ async function extractData(detail_url, p_id){
     const jsondata = {}
     jsondata.num_process = p_id
     /****** get details *******/
+    fs.writeFileSync("1.html", dom.serialize())
     $detail_div = dom.window.document.getElementById("num_process")
     console.log('detail_div', $detail_div)
     jsondata.details = Array.from($detail_div.querySelectorAll("dt")).map($dt => 
