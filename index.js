@@ -148,7 +148,7 @@ function setFilterProcessId(pId){
         "fPP:numeroProcesso:respectivoTribunal",
         "fPP:numeroProcesso:numeroOrgaoJustica",
     ]
-    const reg = /\d+-\d+\.\d+.\d+.\d+.\d+/
+    const reg = /(\d+)-(\d+)\.(\d+)\.(\d+).(\d+)\.(\d+)/
     const matches = pId.match(reg)
     for(let i = 0; i < inputIds.length; i++){
         let $input = document.getElementById(inputIds[i])
