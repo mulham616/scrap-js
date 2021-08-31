@@ -153,6 +153,7 @@ function setFilterProcessId(pId){
     for(let i = 0; i < inputIds.length; i++){
         let $input = document.getElementById(inputIds[i])
         $($input).val(matches[i])
+        console.log(inputIds[i], $($input).val)
     }
 }
 
