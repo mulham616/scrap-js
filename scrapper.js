@@ -112,14 +112,14 @@ async function downloadFile(){
         'javax.faces.ViewState': 'j_id7',
         'detalheDocumento:download': 'detalheDocumento:download' 
       });
-    axios_file_download(
-        'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam',
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            data
-        })
+    axios_file_download({
+        url: 'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam',
+        method: 'get',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data
+    })
 }
 
 async function saveJson2Mongo(data){
