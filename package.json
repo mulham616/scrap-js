@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js 0800097-04.2017.8.10.0135 2>nul",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,6 +21,7 @@
     "jsdom": "^17.0.0",
     "moment": "^2.29.1",
     "mongoose": "^6.0.2",
+    "morgan": "^1.10.0",
     "qs": "^6.10.1",
     "request": "^2.88.2",
     "tough-cookie": "^4.0.0"
