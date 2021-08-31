@@ -283,6 +283,7 @@ void async function main(){
                     console.log("open new url", url)
                     resolve()
                 }
+                $a.click()
             })
         })()
         await timer(500)
