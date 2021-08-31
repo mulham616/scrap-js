@@ -13,7 +13,7 @@ async function axios_file_download(config, filename){
         ...config, 
         responseType: 'stream',
     })
-    !filename && ( filename = Math.random().toString(16).substr(2) )
+    !filename && ( filename = Math.random().toString(16).substr(2) + ".pdf")
     const response = await request
     const writeStream = fs.createWriteStream(path.join(__dirname, '../downloads', filename))
     response.data.pipe(writeStream)
