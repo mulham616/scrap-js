@@ -43,15 +43,23 @@ function getEvents(){
         .map($date => ({
             date: $($date).text().trim(), 
             description: $($date).next().find('.text-upper.texto-movimento').text().trim(),
-            time: $($date).next().find('.col-sm-12 small.text-muted.pull-right').text().trim()
+            time: $($date).next().find('.col-sm-12 small.text-muted.pull-right').text().trim(),
+            items: Array.from($($date).next().find('.anexos'))
+                .map($item => $($($item).children()[0]).text().trim())
+                .filter(text => text)
+                .map(text => text.match(/(\d)+ - (.*)/))
+                .map(matches => ({
+                    number: matches[1],
+                    title: matches[2]
+                }))
         }))
         .filter(each => each.date)
         .map(each => ({ 
-            date:moment(each.date, 'DD MMM YYYY').format('DD/MM/YYYY') + " " + each.time,
             description: each.description, 
-            items: []
+            date:moment(each.date, 'DD MMM YYYY').format('DD/MM/YYYY') + " " + each.time ,
+            items: each.items
         }))
-    console.log(events)
+    console.log(JSON.stringify(events, '', '\t'))
     return events
 }
 
