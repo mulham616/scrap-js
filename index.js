@@ -162,7 +162,7 @@ async function pressSearchBtn(){
         await timer(1000)
     }while(!window.executarReCaptcha)
     // console.log()
-    console.log(document.getElementById("fPP:searchProcessos").outerHTML)
+    console.log(document.getElementById("fPP:searchProcessos").id, "pressed")
     document.getElementById("fPP:searchProcessos").click()
     await timer(500)
 }
