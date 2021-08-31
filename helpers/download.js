@@ -1,21 +1,21 @@
 const axios = require('axios').default
 const fs = require('fs')
 const path = require('path')
+const { promisify } = require('util')
+const stream = require('stream');
 
-async function axios_file_download(url, filename){
-    const axiosStream = axios.get(url, {
+const finished = promisify(stream.finished);
+
+async function axios_file_download(config, filename){
+    const request = axios({
+        ...config, 
         responseType: 'stream',
     })
-    const writeStream = fs.createWriteStream(path.join(__dirname, '../database', filename))
-    axiosStream.pipe(writeStream)
-    return new Promise((resolve, reject) => {
-        axiosStream.on('end', () => {
-            resolve()
-        })
-        axiosStream.on('error', (error) => {
-            reject(error)
-        })
-    })
+    !filename && ( filename = Math.random().toString(16).substr(2) )
+    const response = await request
+    const writeStream = fs.createWriteStream(path.join(__dirname, '../downloads', filename))
+    response.data.pipe(writeStream)
+    return finished(writeStream)
 }
 
 module.exports = axios_file_download

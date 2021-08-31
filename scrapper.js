@@ -105,21 +105,23 @@ async function loadListView(){
     });
     return dom
 }
+
 async function downloadFile(){
-    $download = document.getElementById('detalheDocumento:download')
-    const downloadurl = await (function(){
-        return new Promise((resolve, reject) => {
-            window.confirm = (text) => {
-                console.log('download confirm:', text)
-            }
-            window.open = (url, title, features) => {
-                console.log(url, title)
-                resolve(url)
-            }
-            $download.click()
+    var data = qs.stringify({
+        'detalheDocumento': 'detalheDocumento',
+        'autoScroll': '',
+        'javax.faces.ViewState': 'j_id7',
+        'detalheDocumento:download': 'detalheDocumento:download' 
+      });
+    axios_file_download(
+        {
+            url: 'https://speed.hetzner.de/100MB.bin',
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data
         })
-    })()
-    axios_file_download(downloadurl)
 }
 
 async function saveJson2Mongo(data){

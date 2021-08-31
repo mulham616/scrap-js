@@ -1,6 +1,8 @@
 const jsdom = require('jsdom')
 const { JSDOM } = jsdom
 const moment = require('moment')
+const qs = require('qs')
+const axios_file_download = require('./helpers/download')
 
 function loadJquery(dom){
     delete require.cache[require.resolve('jquery')]
@@ -69,7 +71,7 @@ function getEvents(){
             date:moment(each.date, 'DD MMM YYYY').format('DD/MM/YYYY') + " " + each.time ,
             items: each.items
         }))
-    console.log(JSON.stringify(events, '', '\t'))
+    // console.log(JSON.stringify(events, '', '\t'))
     return events
 }
 
@@ -105,7 +107,7 @@ void async function main(){
     // console.log(events)
 
     getEvents()
-}()
+}
 
 /*
 media interno
@@ -117,3 +119,23 @@ text-upper texto-movimento
 
 
 */
+
+async function downloadFile(){
+    var data = qs.stringify({
+        'detalheDocumento': 'detalheDocumento',
+        'autoScroll': '',
+        'javax.faces.ViewState': 'j_id7',
+        'detalheDocumento:download': 'detalheDocumento:download' 
+      });
+    axios_file_download(
+        {
+            url: 'https://speed.hetzner.de/100MB.bin',
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data
+        })
+}
+
+downloadFile()
