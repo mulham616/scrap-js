@@ -7,6 +7,8 @@ const stream = require('stream');
 const finished = promisify(stream.finished);
 
 async function axios_file_download(config, filename){
+    if(!fs.existsSync('../downloads'))
+        fs.mkdirSync('../downloads')
     const request = axios({
         ...config, 
         responseType: 'stream',
