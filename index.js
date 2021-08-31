@@ -217,12 +217,13 @@ async function extractData(detail_url, p_id){
     fs.writeFileSync("1.html", dom.serialize())
     $detail_div = dom.window.document.getElementById("maisDetalhes")
     console.log('detail_div', $detail_div)
-    jsondata.details = Array.from($detail_div.querySelectorAll("dt")).map($dt => 
-        ({
-            key: $dt.innerHTML,
-            value: $dt.nextSibling().innerHTML
-        })
-    )
+    console.log($detail_div.querySelectorAll("dt"))
+    // jsondata.details = Array.from($detail_div.querySelectorAll("dt")).map($dt => 
+    //     ({
+    //         key: $dt.innerHTML,
+    //         value: $dt.nextSibling().innerHTML
+    //     })
+    // )
     console.log(jsondata)
     return jsondata
 }
