@@ -9,7 +9,6 @@ const axiosCookieJarSupport = require('axios-cookiejar-support').default
 const tough = require('tough-cookie')
 const util = require('util')
 const timer = util.promisify(setTimeout)
-require('./database/connect')
 const mongoose = require('mongoose')
 const axios_file_download = require('./helpers/download')
 const fs = require('fs')
@@ -106,21 +105,21 @@ async function loadListView(){
     });
     return dom
 }
-async function downloadFile(dom){
+async function downloadFile(){
     $download = document.getElementById('detalheDocumento:download')
     const downloadurl = await (function(){
         return new Promise((resolve, reject) => {
-            dom.window.confirm = (text) => {
+            window.confirm = (text) => {
                 console.log('download confirm:', text)
             }
-            dom.window.open = (url, title, features) => {
+            window.open = (url, title, features) => {
                 console.log(url, title)
                 resolve(url)
             }
             $download.click()
         })
     })()
-    axios_file_download(url)
+    axios_file_download(downloadurl)
 }
 
 async function saveJson2Mongo(data){
@@ -230,6 +229,7 @@ async function getProcessDetail(detail_url, p_id){
     jsondata.polo_passive = getPolo('Passivo')
     jsondata.events = getEvents()
     // jsondata.polo_passive = polo_passive
+    await downloadFile()
     return jsondata
 }
 

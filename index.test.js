@@ -1,7 +1,7 @@
 const app = require("./index.js");
 const supertest = require("supertest");
 
-jest.setTimeout(60000)
+jest.setTimeout(120000)
 
 test("GET /collect/0800097-04.2017.8.10.0135", async () => {
   
