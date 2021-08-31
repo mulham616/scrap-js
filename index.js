@@ -171,7 +171,7 @@ async function requestData(p_id){
     console.log(data)
     try{
         const response = await request
-        console.log(response.headers)
+        console.log(response.request.headers)
         const cookieString = cookieJar.getCookieStringSync(urls.listViewUrl)
         console.log('Login Success:', urls.listViewUrl)
         console.log('Cookie:', cookieString)
