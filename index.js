@@ -261,9 +261,14 @@ function getPolo(type){
 
 function getEvents(){
     const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
-    const eventdates = Array.from($timelineDiv.querySelectorAll(".media.data"))
+    const $eventdates = Array.from($timelineDiv.querySelectorAll(".media.data"))
     moment.locale('pt')
-    const events = eventdates.map(date => $(date).text().trim())
+    const $eventdetails = $eventdates.map($date => $(date).next())
+    const details = $eventdetails.map($detail => ({
+        description: $($detail).find('.text-upper.texto-movimento').text().trim(),
+        time: $($detail).find('.col-sm-12 small.text-muted.pull-right').text().trim()
+    }))
+    const events = $eventdates.map(date => $(date).text().trim())
         .filter(each => each)
         .map(each => moment(each, 'DD MMM YYYY').format('DD/MM/YYYY'))
         .map(date => (
