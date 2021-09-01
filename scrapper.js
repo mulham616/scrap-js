@@ -335,7 +335,7 @@ async function scrap_process(processId){
     await timer(500)
     
     const jsondata = await getProcessDetail(detail_url, p_id)
-    console.log(jsondata)
+    console.log(JSON.stringify(jsondata, "", "\t"))
     await saveJson2Mongo(jsondata)
     return jsondata
 }
