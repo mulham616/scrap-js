@@ -299,7 +299,7 @@ async function getEvents(){
     // console.log(JSON.stringify(events, '', '\t'))
     for(let event of events){
         for(let item of event.items){
-            event.$a.click()
+            item.$a?.click()
             await timer(500)
             delete event.$a
             let file = await downloadFile(detail_url)
