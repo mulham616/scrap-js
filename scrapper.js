@@ -113,7 +113,7 @@ async function downloadFile(referer){
         'javax.faces.ViewState': viewState,
         'detalheDocumento:download': 'detalheDocumento:download' 
       });
-    axios_file_download({
+    let filename = await axios_file_download({
         url: 'https://pje.tjma.jus.br/pje/Processo/ConsultaProcesso/Detalhe/listProcessoCompletoAdvogado.seam',
         method: 'get',
         headers: {
@@ -123,6 +123,7 @@ async function downloadFile(referer){
         },
         data
     })
+    return filename
 }
 
 async function saveJson2Mongo(data){
