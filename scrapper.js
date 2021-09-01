@@ -271,7 +271,7 @@ async function getEvents(detail_url){
             description: $($date).next().find('.text-upper.texto-movimento').text().trim(),
             time: $($date).next().find('.col-sm-12 small.text-muted.pull-right').text().trim(),
             items: Array.from($($date).next().find('.anexos'))
-                .map($item => [$($($item).children()[0]).text().trim(), $($item).find('li'), $($item).children()[0]])
+                .map($item => [$($($item).children()[0]).text().trim(), $($item).find('li>a'), $($item).children()[0]])
                 .filter(([text]) => text)
                 .map(([text, children, $a]) => [text.match(/(\d+) - (.*)/), Array.from(children), $a])
                 .map(([matches, children, $a]) => ({
@@ -280,9 +280,10 @@ async function getEvents(detail_url){
                     title: matches[2],
                     childs: 
                         children.length ? 
-                        children.map( $child => $($child).text().trim() )
-                                .map( text => text.match(/(\d+) - (.*)/) )
-                                .map( matches => ({
+                        children.map( $child => [$($child).text().trim(), $child] )
+                                .map( ([text, $child]) => [text.match(/(\d+) - (.*)/), $child] )
+                                .map( ([matches, $child]) => ({
+                                    $a: $child,
                                     number: matches[1],
                                     title: matches[2]
                                 })) 
@@ -301,9 +302,16 @@ async function getEvents(detail_url){
         for(let item of event.items){
             item.$a?.click()
             await timer(500)
-            delete event.$a
+            delete item.$a
             let file = await downloadFile(detail_url)
             item.file = '/' + file
+            for(let child of item.childs){
+                child.$a?.click()
+                await timer(500)
+                delete child.$a
+                let file = await downloadFile(detail_url)
+                child.file = '/' + file
+            }
         }
     }
     return events
