@@ -230,7 +230,7 @@ async function getProcessDetail(detail_url, p_id){
     /******** polo ********/
     jsondata.polo_active = getPolo('Ativo')
     jsondata.polo_passive = getPolo('Passivo')
-    jsondata.events = await getEvents()
+    jsondata.events = await getEvents(detail_url)
     // jsondata.polo_passive = polo_passive
     await timer(1000)
     return jsondata
@@ -261,7 +261,7 @@ function getPolo(type){
     return polo
 }
 
-async function getEvents(){
+async function getEvents(detail_url){
     const $timelineDiv = document.getElementById('divTimeLine:eventosTimeLineElement')
     const $eventdates = Array.from($timelineDiv.querySelectorAll(".media.data"))
     moment.locale('pt')
