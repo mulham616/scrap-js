@@ -17,7 +17,8 @@ async function axios_file_download(config, filename){
     const response = await request
     const writeStream = fs.createWriteStream(path.join(__dirname, '../downloads', filename))
     response.data.pipe(writeStream)
-    return finished(writeStream)
+    await finished(writeStream)
+    return filename
 }
 
 module.exports = axios_file_download
