@@ -305,6 +305,7 @@ async function getEvents(detail_url){
             delete item.$a
             let file = await downloadFile(detail_url)
             item.file = '/' + file
+            if( !item.childs ) continue
             for(let child of item.childs){
                 child.$a?.click()
                 await timer(500)
