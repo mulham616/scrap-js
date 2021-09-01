@@ -233,7 +233,6 @@ async function getProcessDetail(detail_url, p_id){
     jsondata.events = getEvents()
     // jsondata.polo_passive = polo_passive
     await timer(1000)
-    await downloadFile(detail_url)
     return jsondata
 }
 
@@ -272,10 +271,11 @@ function getEvents(){
             description: $($date).next().find('.text-upper.texto-movimento').text().trim(),
             time: $($date).next().find('.col-sm-12 small.text-muted.pull-right').text().trim(),
             items: Array.from($($date).next().find('.anexos'))
-                .map($item => [$($($item).children()[0]).text().trim(), $($item).find('li')])
+                .map($item => [$($($item).children()[0]).text().trim(), $($item).find('li'), $($item).children()[0]])
                 .filter(([text]) => text)
-                .map(([text, children]) => [text.match(/(\d+) - (.*)/), Array.from(children)])
-                .map(([matches, children]) => ({
+                .map(([text, children, $a]) => [text.match(/(\d+) - (.*)/), Array.from(children), $a])
+                .map(([matches, children, $a]) => ({
+                    $a,
                     number: matches[1],
                     title: matches[2],
                     childs: 
@@ -297,6 +297,15 @@ function getEvents(){
             items: each.items
         }))
     // console.log(JSON.stringify(events, '', '\t'))
+    for(let event of events){
+        for(let item of event.items){
+            event.$a.click()
+            await timer(500)
+            delete event.$a
+            let file = await downloadFile(detail_url)
+            item.file = '/' + file
+        }
+    }
     return events
 }
 
